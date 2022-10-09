@@ -13,9 +13,6 @@ var rootCmd = &cobra.Command{
 	Long: `mikrodns is a CLI client ofdns of given mikrotik. You can view, change and add dns static record. 
 	 You need to add MIKROTIK_HOST, MIKROTIK_USER, MIKROTIK_PASS and MIKROTIK_TLS
 	 to environment variables`,
-	Run: func(cmd *cobra.Command, args []string) {
-		// Set command values based on preference
-	},
 }
 
 func Execute() {

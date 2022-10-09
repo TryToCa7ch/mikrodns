@@ -1,7 +1,7 @@
 package main
 
 import (
-	"mikrotik_helper/cmd"
+	"mikrodns/cmd"
 )
 
 func main() {

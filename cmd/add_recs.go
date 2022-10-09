@@ -2,7 +2,7 @@ package cmd
 
 import (
 	"fmt"
-	"mikrotik_helper/utils"
+	"mikrodns/utils"
 	"os"
 
 	"github.com/spf13/cobra"

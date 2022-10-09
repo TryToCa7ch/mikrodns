@@ -1,4 +1,4 @@
-module mikrotik_helper
+module mikrodns
 
 go 1.19
 
