@@ -19,9 +19,9 @@ var addRecsCmd = &cobra.Command{
 			os.Exit(1)
 		}
 		var record utils.DnsRecord
-		fmt.Print("Insert ip address of endpoint ")
+		fmt.Print("Insert ip address of endpoint\n")
 		fmt.Scan(&record.Address)
-		fmt.Print("Insert dns name of record ")
+		fmt.Print("Insert dns name of record\n")
 		fmt.Scan(&record.Host)
 		record.Disabled = "false"
 		status_code := utils.AddDnsRecord(client, record.Host, record.Address)

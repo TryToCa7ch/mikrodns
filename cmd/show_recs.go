@@ -18,9 +18,14 @@ var showRecsCmd = &cobra.Command{
 			fmt.Println("there's err on connection", err)
 			os.Exit(1)
 		}
-		res := utils.GetAllDnsRecords(client)
-		for _, rec := range res {
-			fmt.Printf("ID: %s\tAddress: %s\tIP: %s\tDisabled: %s\n", rec.Id[1:], rec.Address, rec.Host, rec.Disabled)
+		res, err := utils.GetAllDnsRecords(client)
+		if err == nil {
+			for _, rec := range res {
+				fmt.Printf("ID: %s\tAddress: %s\tIP: %s\tDisabled: %s\n", rec.Id[1:], rec.Address, rec.Host, rec.Disabled)
+			}
+		} else {
+			fmt.Printf("There's errors: %w\n", err)
+			os.Exit(1)
 		}
 	},
 }
@@ -31,6 +36,10 @@ var showRecCmd = &cobra.Command{
 	Args:    cobra.MaximumNArgs(1),
 	Short:   "Get  dns static record with given id",
 	Run: func(cmd *cobra.Command, args []string) {
+		if len(args) == 0 {
+			fmt.Println("Provide static record id")
+			os.Exit(1)
+		}
 		client, err := utils.Dial()
 		if err != nil {
 			fmt.Println("there's err on connection", err)

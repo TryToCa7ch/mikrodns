@@ -16,7 +16,8 @@ var (
 	Password = os.Getenv("MIKROTIK_PASS")
 	Tls      = os.Getenv("MIKROTIK_TLS")
 
-	ErrNotFound = errors.New("not found")
+	ErrNotFound     = errors.New("not found")
+	ErrEmptyRecList = errors.New("Empty Static DNS List")
 )
 
 type DnsRecord struct {
@@ -38,18 +39,21 @@ func AddDnsRecord(c *routeros.Client, hostname string, address string) string {
 	return "Added"
 }
 
-func GetAllDnsRecords(c *routeros.Client) []DnsRecord {
+func GetAllDnsRecords(c *routeros.Client) ([]DnsRecord, error) {
 	r, _ := c.Run("/ip/dns/static/print")
 	record_list := []DnsRecord{}
-	for _, re := range r.Re {
-		var record DnsRecord
-		record.Id = re.Map[".id"]
-		record.Address = re.Map["name"]
-		record.Host = re.Map["address"]
-		record.Disabled = re.Map["disabled"]
-		record_list = append(record_list, record)
+	if len(r.Re) != 0 {
+		for _, re := range r.Re {
+			var record DnsRecord
+			record.Id = re.Map[".id"]
+			record.Address = re.Map["name"]
+			record.Host = re.Map["address"]
+			record.Disabled = re.Map["disabled"]
+			record_list = append(record_list, record)
+		}
+		return record_list, nil
 	}
-	return record_list
+	return record_list, fmt.Errorf("%w", ErrEmptyRecList)
 }
 
 func GetDnsRecord(c *routeros.Client, id string) (DnsRecord, error) {
