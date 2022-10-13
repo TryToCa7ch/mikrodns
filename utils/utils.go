@@ -88,3 +88,18 @@ func GetDnsRecord(c *routeros.Client, id string) (DnsRecord, error) {
 	}
 	return recToReturn, fmt.Errorf("%q: %w", id, ErrNotFound)
 }
+
+func ChangeDnsRecord(record DnsRecord) (DnsRecord, error) {
+	client, err := Dial()
+	if err != nil {
+		fmt.Println(color_print.Fata("there's err on connection", err))
+		os.Exit(1)
+	}
+	command := fmt.Sprintf("/ip/dns/static/set %s =name=%s =address=%s =disabled=%s", record.Id, record.Host, record.Address, record.Disabled)
+	_, err = client.RunArgs(strings.Split(command, " "))
+	if err != nil {
+		return DnsRecord{}, err
+	} else {
+		return GetDnsRecord(client, record.Id)
+	}
+}
