@@ -1,4 +1,4 @@
-package utils
+package color_print
 
 import "fmt"
 

@@ -3,7 +3,7 @@ package utils
 import (
 	"errors"
 	"fmt"
-	"log"
+	"mikrodns/color_print"
 	"os"
 	"strings"
 
@@ -25,18 +25,21 @@ type DnsRecord struct {
 }
 
 func Dial() (*routeros.Client, error) {
-	fmt.Printf(Info("\nConnecting to: %s as %s\n\n"), Address, Username)
-	return routeros.Dial(Address, Username, Password)
+	if Address != "" && Username != "" && Tls != "" {
+		fmt.Printf(color_print.Info("\nConnecting to: %s as %s\n\n"), Address, Username)
+		return routeros.Dial(Address, Username, Password)
+	} else {
+		return nil, fmt.Errorf("Check Env variables")
+	}
 }
 
-func AddDnsRecord(c *routeros.Client, hostname string, address string) string {
+func AddDnsRecord(c *routeros.Client, hostname string, address string) (DnsRecord, error) {
 	command := fmt.Sprintf("/ip/dns/static/add =name=%s =address=%s", hostname, address)
 	_, err := c.RunArgs(strings.Split(command, " "))
 	if err != nil {
-		log.Print(err)
-		return err.Error()
+		return DnsRecord{}, err
 	}
-	return "Added"
+	return GetDnsRecordByName(c, hostname)
 }
 
 func GetAllDnsRecords(c *routeros.Client) ([]DnsRecord, error) {
@@ -54,6 +57,21 @@ func GetAllDnsRecords(c *routeros.Client) ([]DnsRecord, error) {
 		return record_list, nil
 	}
 	return record_list, fmt.Errorf("%w", ErrEmptyRecList)
+}
+
+func GetDnsRecordByName(c *routeros.Client, name string) (DnsRecord, error) {
+	r, _ := c.Run("/ip/dns/static/print")
+	var recToReturn DnsRecord
+	for _, re := range r.Re {
+		if re.Map["name"] == name {
+			recToReturn.Id = re.Map[".id"]
+			recToReturn.Address = re.Map["name"]
+			recToReturn.Host = re.Map["address"]
+			recToReturn.Disabled = re.Map["disabled"]
+			return recToReturn, nil
+		}
+	}
+	return recToReturn, fmt.Errorf("%q: %w", name, ErrNotFound)
 }
 
 func GetDnsRecord(c *routeros.Client, id string) (DnsRecord, error) {
