@@ -22,7 +22,7 @@ var showRecsCmd = &cobra.Command{
 		res, err := utils.GetAllDnsRecords(client)
 		if err == nil {
 			for _, rec := range res {
-				fmt.Printf("ID: %s\tAddress: %s\tIP: %s\tDisabled: %s\n", rec.Id[1:], rec.Address, rec.Host, rec.Disabled)
+				fmt.Printf("ID: %s\tAddress: %s\tIP: %s\tDisabled: %s\n", rec.Id[1:], rec.Name, rec.Address, rec.Disabled)
 			}
 		} else {
 			fmt.Printf(color_print.Fata("There's errors: %s", err))
@@ -51,7 +51,7 @@ var showRecCmd = &cobra.Command{
 			fmt.Println(color_print.Fata("There's no dns record with given id"))
 			os.Exit(1)
 		}
-		fmt.Printf("ID: %s\tAddress: %s\tIP: %s\tDisabled: %s\n", res.Id[1:], res.Address, res.Host, res.Disabled)
+		fmt.Printf("ID: %s\tAddress: %s\tIP: %s\tDisabled: %s\n", res.Id[1:], res.Name, res.Address, res.Disabled)
 	},
 }
 

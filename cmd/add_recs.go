@@ -23,13 +23,13 @@ var addRecsCmd = &cobra.Command{
 		fmt.Print("Insert ip address of endpoint\n")
 		fmt.Scan(&record.Address)
 		fmt.Print("Insert dns name of record\n")
-		fmt.Scan(&record.Host)
+		fmt.Scan(&record.Name)
 		record.Disabled = "false"
-		added_record, err := utils.AddDnsRecord(client, record.Host, record.Address)
+		added_record, err := utils.AddDnsRecord(client, record.Address, record.Name)
 		if err != nil {
 			fmt.Println(color_print.Fata("There's error when trying to add new record: \n", err))
 		} else {
-			fmt.Println(added_record.Id, added_record.Address, added_record.Host, added_record.Disabled)
+			fmt.Println(added_record.Id, added_record.Address, added_record.Name, added_record.Disabled)
 		}
 	},
 }
