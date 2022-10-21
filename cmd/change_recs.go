@@ -38,41 +38,29 @@ func init() {
 }
 
 func menu_handler(record utils.DnsRecord, status int) {
+	var default_message = fmt.Sprintf("Your dns record is:\n ID: %s\tIp address: %s\tHostname: %s\tDisabled: %s\n", record.Id, record.Address, record.Name, record.Disabled)
+	var picker_message = fmt.Sprintf("Pick waht you need to change:\n1. Hostname\n2. IP Address\n3. End\n")
 	fmt.Println(status)
 	switch s := strconv.Itoa(status); s {
 	case "88":
-		fmt.Printf("Your dns record is:\n ID: %s\tIp address: %s\tHostname: %s\tDisabled: %s\n", record.Id, record.Host, record.Address, record.Disabled)
+		fmt.Printf(default_message)
 		t := 88
-		fmt.Printf("Pick waht you need to change:\n1. Ip address\n2. Hostname\n3. Disabled status\n4. End\n")
+		fmt.Printf(picker_message)
 		fmt.Scanf("%d\n", &t)
 		menu_handler(record, t)
 	case "1":
-		fmt.Printf("Your dns record is:\n ID: %s\tIp address: %s\tHostname: %s\tDisabled: %s\n", record.Id, record.Host, record.Address, record.Disabled)
-		t := 1
+		fmt.Printf(default_message)
 		fmt.Printf("You changing Hostname.\n")
-		fmt.Scan(&record.Address)
-		fmt.Printf("Pick waht you need to change:\n1. Ip address\n2. Hostname\n3. Disabled status\n4. End\n")
-		fmt.Scanf("%d\n", &t)
-		menu_handler(record, t)
+		fmt.Scan(&record.Name)
+		menu_handler(record, 88)
 	case "2":
-		fmt.Printf("Your dns record is:\n ID: %s\tIp address: %s\tHostname: %s\tDisabled: %s\n", record.Id, record.Host, record.Address, record.Disabled)
-		t := 2
+		fmt.Printf(default_message)
 		fmt.Printf("You changing Ip address.\n")
-		fmt.Scan(&record.Host)
-		fmt.Printf("Pick waht you need to change:\n1. Ip address\n2. Hostname\n3. Disabled status\n4. End\n")
-		fmt.Scanf("%d\n", &t)
-		menu_handler(record, t)
+		fmt.Scan(&record.Address)
+		menu_handler(record, 88)
 	case "3":
-		fmt.Printf("Your dns record is:\n ID: %s\tIp address: %s\tHostname: %s\tDisabled: %s\n", record.Id, record.Host, record.Address, record.Disabled)
 		t := 3
-		fmt.Printf("You changing Disabled status.\n")
-		fmt.Scan(&record.Disabled)
-		fmt.Printf("Pick waht you need to change:\n1. Ip address\n2. Hostname\n3. Disabled status\n4. End\n")
-		fmt.Scanf("%d\n", &t)
-		menu_handler(record, t)
-	case "4":
-		t := 4
-		fmt.Printf("Your dns record is:\n ID: %s\tIp address: %s\tHostname: %s\tDisabled: %s\n", record.Id, record.Host, record.Address, record.Disabled)
+		fmt.Printf(default_message)
 		fmt.Printf("Confirm changing[Y/n]\n")
 		var confirmation string
 		fmt.Scanf("%s\n", &confirmation)
@@ -85,7 +73,7 @@ func menu_handler(record utils.DnsRecord, status int) {
 				break
 			}
 		} else {
-			fmt.Printf("Pick waht you need to change:\n1. Ip address\n2. Hostname\n3. Disabled status\n4. End\n")
+			fmt.Printf(picker_message)
 			fmt.Scanf("%d\n", &t)
 			menu_handler(record, t)
 		}
