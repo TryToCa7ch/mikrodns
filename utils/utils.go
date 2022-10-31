@@ -4,6 +4,7 @@ import (
 	"errors"
 	"fmt"
 	"mikrodns/color_print"
+	"mikrodns/settings"
 	"os"
 	"strings"
 
@@ -11,14 +12,23 @@ import (
 )
 
 var (
-	Address  = os.Getenv("MIKROTIK_HOST")
-	Username = os.Getenv("MIKROTIK_USER")
-	Password = os.Getenv("MIKROTIK_PASS")
-	Tls      = os.Getenv("MIKROTIK_TLS")
+	Address  string
+	Username string
+	Password string
+	Tls      string
 
 	ErrNotFound     = errors.New("not found")
 	ErrEmptyRecList = errors.New("Empty Static DNS List")
 )
+
+func init() {
+	settings.InitEnvConfigs()
+
+	Address = settings.Configs.Host
+	Username = settings.Configs.User
+	Password = settings.Configs.Password
+	Tls = settings.Configs.TLS
+}
 
 type DnsRecord struct {
 	Id, Address, Name, Disabled string
@@ -46,7 +56,6 @@ func GetAllDnsRecords(c *routeros.Client) ([]DnsRecord, error) {
 	r, _ := c.Run("/ip/dns/static/print")
 	record_list := []DnsRecord{}
 	if len(r.Re) != 0 {
-		fmt.Println(r.Re)
 		for _, re := range r.Re {
 			var record DnsRecord
 			record.Id = re.Map[".id"]
