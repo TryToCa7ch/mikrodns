@@ -3,6 +3,7 @@ package utils
 import (
 	"errors"
 	"fmt"
+	"log"
 	"mikrodns/color_print"
 	"mikrodns/settings"
 	"os"
@@ -22,6 +23,8 @@ var (
 )
 
 func init() {
+	log.SetFlags(0)
+
 	settings.InitEnvConfigs()
 
 	Address = settings.Configs.Host
@@ -36,7 +39,7 @@ type DnsRecord struct {
 
 func Dial() (*routeros.Client, error) {
 	if Address != "" && Username != "" && Tls != "" {
-		fmt.Printf(color_print.Info("\nConnecting to: %s as %s\n\n"), Address, Username)
+		log.Printf(color_print.Info("\nConnecting to: %s as %s\n\n"), Address, Username)
 		return routeros.Dial(Address, Username, Password)
 	} else {
 		return nil, fmt.Errorf("Check Env variables")
@@ -100,10 +103,10 @@ func GetDnsRecord(c *routeros.Client, id string) (DnsRecord, error) {
 }
 
 func ChangeDnsRecord(record DnsRecord) (DnsRecord, error) {
-	fmt.Println(record)
+
 	client, err := Dial()
 	if err != nil {
-		fmt.Println(color_print.Fata("there's err on connection", err))
+		log.Fatal("there's err on connection", err)
 		os.Exit(1)
 	}
 	command := fmt.Sprintf("/ip/dns/static/set %s name=%s address=%s", record.Id, record.Name, record.Address)

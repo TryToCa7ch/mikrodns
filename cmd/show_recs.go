@@ -1,7 +1,7 @@
 package cmd
 
 import (
-	"fmt"
+	"log"
 	"mikrodns/color_print"
 	"mikrodns/utils"
 	"os"
@@ -16,16 +16,16 @@ var showRecsCmd = &cobra.Command{
 	Run: func(cmd *cobra.Command, args []string) {
 		client, err := utils.Dial()
 		if err != nil {
-			fmt.Println(color_print.Fata("there's err on connection: ", err))
+			log.Println(color_print.Fata("there's err on connection: ", err))
 			os.Exit(1)
 		}
 		res, err := utils.GetAllDnsRecords(client)
 		if err == nil {
 			for _, rec := range res {
-				fmt.Printf("ID: %s\tAddress: %s\tIP: %s\tDisabled: %s\n", rec.Id[1:], rec.Name, rec.Address, rec.Disabled)
+				log.Printf("ID: %s\tAddress: %s\tIP: %s\tDisabled: %s\n", rec.Id[1:], rec.Name, rec.Address, rec.Disabled)
 			}
 		} else {
-			fmt.Printf(color_print.Fata("There's errors: %s", err))
+			log.Printf(color_print.Fata("There's errors: %s", err))
 			os.Exit(1)
 		}
 	},
@@ -38,24 +38,26 @@ var showRecCmd = &cobra.Command{
 	Short:   "Get  dns static record with given id",
 	Run: func(cmd *cobra.Command, args []string) {
 		if len(args) == 0 {
-			fmt.Println(color_print.Fata("Provide static record id"))
+			log.Println(color_print.Fata("Provide static record id"))
 			os.Exit(1)
 		}
 		client, err := utils.Dial()
 		if err != nil {
-			fmt.Println(color_print.Fata("there's err on connection: ", err))
+			log.Println(color_print.Fata("there's err on connection: ", err))
 			os.Exit(1)
 		}
 		res, err := utils.GetDnsRecord(client, args[0])
 		if err != nil {
-			fmt.Println(color_print.Fata("There's no dns record with given id"))
+			log.Println(color_print.Fata("There's no dns record with given id"))
 			os.Exit(1)
 		}
-		fmt.Printf("ID: %s\tAddress: %s\tIP: %s\tDisabled: %s\n", res.Id[1:], res.Name, res.Address, res.Disabled)
+		log.Printf("ID: %s\tAddress: %s\tIP: %s\tDisabled: %s\n", res.Id[1:], res.Name, res.Address, res.Disabled)
 	},
 }
 
 func init() {
+	log.SetFlags(0)
+
 	rootCmd.AddCommand(showRecsCmd)
 	rootCmd.AddCommand(showRecCmd)
 }
