@@ -25,7 +25,7 @@ var showRecsCmd = &cobra.Command{
 				log.Printf("ID: %s\tAddress: %s\tIP: %s\tDisabled: %s\n", rec.Id[1:], rec.Name, rec.Address, rec.Disabled)
 			}
 		} else {
-			log.Printf(color_print.Fata("There's errors: %s", err))
+			log.Println(color_print.Fata("There's errors: %s", err))
 			os.Exit(1)
 		}
 	},

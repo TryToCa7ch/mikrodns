@@ -19,14 +19,13 @@ var (
 	Tls      string
 
 	ErrNotFound     = errors.New("not found")
-	ErrEmptyRecList = errors.New("Empty Static DNS List")
+	ErrEmptyRecList = errors.New("empty Static DNS List")
 )
 
 func init() {
 	log.SetFlags(0)
 
 	settings.InitEnvConfigs()
-
 	Address = settings.Configs.Host
 	Username = settings.Configs.User
 	Password = settings.Configs.Password
@@ -42,7 +41,7 @@ func Dial() (*routeros.Client, error) {
 		log.Printf(color_print.Info("\nConnecting to: %s as %s\n\n"), Address, Username)
 		return routeros.Dial(Address, Username, Password)
 	} else {
-		return nil, fmt.Errorf("Check Env variables")
+		return nil, fmt.Errorf("check Env variables")
 	}
 }
 

@@ -2,6 +2,7 @@ package settings
 
 import (
 	"log"
+	"os"
 
 	"github.com/spf13/viper"
 )
@@ -22,11 +23,15 @@ func InitEnvConfigs() {
 }
 
 func loadEnvVariables() (config *Config) {
+	homedir, err := os.UserHomeDir()
+	if err != nil {
+		log.Fatal(err)
+	}
 	// Tell viper the path/location of your env file. If it is root just add "."
-	viper.AddConfigPath(".")
+	viper.AddConfigPath(homedir)
 
 	// Tell viper the name of your file
-	viper.SetConfigName("env")
+	viper.SetConfigName(".mikrodns")
 
 	// Tell viper the type of your file
 	viper.SetConfigType("yml")
@@ -40,5 +45,6 @@ func loadEnvVariables() (config *Config) {
 	if err := viper.Unmarshal(&config); err != nil {
 		log.Fatal(err)
 	}
+
 	return
 }

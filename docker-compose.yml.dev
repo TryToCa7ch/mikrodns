@@ -1,0 +1,20 @@
+version: "3.8"
+
+services:
+  mikrotik:
+    image: evilfreelancer/docker-routeros:6.48.1
+    restart: unless-stopped
+    privileged: true
+    cap_add:
+      - NET_ADMIN
+    devices:
+      - /dev/net/tun
+    ports:
+      - "8080:80"
+      - "18728:8728"
+      - "18729:8729"
+    volumes:
+      - mikrotik-data:/routeros
+
+volumes:
+    mikrotik-data:
