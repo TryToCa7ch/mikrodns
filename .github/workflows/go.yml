@@ -20,9 +20,9 @@ jobs:
         go-version: '1.20'
 
     - name: Build
-      run: go build -o mikrodns_${{ github.action_ref }}
+      run: go build -o mikrodns_${{ github.event_name }}
     
     - uses: actions/upload-artifact@v3
       with:
-        name: mikrodns_${{ github.action_ref }}
-        path: mikrodns_${{ github.action_ref }}
+        name: mikrodns_${{ github.event_name }}
+        path: mikrodns_${{ github.event_name }}
