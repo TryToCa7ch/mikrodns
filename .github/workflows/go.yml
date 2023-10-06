@@ -21,18 +21,19 @@ jobs:
         go-version: '1.20'
 
     - name: Set env
+      id: vars
       run: echo "RELEASE_VERSION=${GITHUB_REF#refs/*/}" >> $GITHUB_ENV
 
     - name: Build
-      run: go build -o mikrodns_${{ GITHUB_ENV }}
+      run: go build -o mikrodns_${{ steps.vars.outputs.RELEASE_VERSION }}
     
     - name: Create Release
       uses: actions/create-release@v1
       env:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }} # This token is provided by Actions, you do not need to create your own token
       with:
-        tag_name: ${{ GITHUB_ENV }}
-        release_name: Release ${{ GITHUB_ENV }}
+        tag_name: ${{ steps.vars.outputs.RELEASE_VERSION }}
+        release_name: Release ${{ steps.vars.outputs.RELEASE_VERSION }}
         body: |
           Changes in this Release
           - Just testing releases
@@ -44,5 +45,5 @@ jobs:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       with:
         upload_url: ${{ steps.create_release.outputs.upload_url }}  
-        asset_path: ./mikrodns_${{ GITHUB_ENV }}
-        asset_name: mikrodns_${{ GITHUB_ENV }}
+        asset_path: ./mikrodns_${{ steps.vars.outputs.RELEASE_VERSION }}
+        asset_name: mikrodns_${{ steps.vars.outputs.RELEASE_VERSION }}
